@@ -13,7 +13,7 @@ ps: 暂不支持选座购买。
 
 其流程图如下:
 
-<img src="https://github.com/MakiNaruto/Automatic_ticket_purchase/blob/master/images/flow_chart.jpeg" width="50%" height="50%" />
+<img src="./images/flow_chart.jpeg" width="50%" height="50%" />
 
 ## 准备工作
 ### 1. 配置环境
@@ -44,7 +44,7 @@ def account_login():
 2.1 若采取账号方式，修改代码中下面的信息，进行抢票。
 
 item_id根据地区来确定,每一个城市对应不同的item_id。选择相应地区后将箭头指向的item_id填写到函数内。
-```text
+```python
 def __init__(self):
     ...
     # 若选择账号登录方式，则需要填写

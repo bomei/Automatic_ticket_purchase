@@ -13,6 +13,7 @@ import tools
 import argparse
 import requests
 from requests import session
+import yaml
 
 
 class DaMaiTicket:
@@ -20,10 +21,13 @@ class DaMaiTicket:
         # 登录信息
         self.login_cookies = {}
         self.session = session()
-        self.login_id: str = 'account'  # 大麦网登录账户名
-        self.login_password: str = 'password'  # 大麦网登录密码
+        with open("login.private.yml",'r') as f:
+            login_data = f.read()
+        login_info = yaml.load(login_data, yaml.Loader)
+        self.login_id: str = login_info[0]['account']  # 大麦网登录账户名
+        self.login_password: str = login_info[0]['secret']  # 大麦网登录密码
         # 以下为抢票必须的参数
-        self.item_id: int = 610820299671  # 商品id
+        self.item_id: int = 723196745821  # 商品id
         self.viewer: list = ['viewer1']  # 在大麦网已填写的观影人
         self.buy_nums: int = 1  # 购买影票数量, 需与观影人数量一致
         self.ticket_price: int = 180  # 购买指定票价

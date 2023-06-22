@@ -19,6 +19,8 @@ from selenium import webdriver
 from selenium.webdriver.common.keys import Keys
 from selenium.webdriver.support.wait import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
+from selenium.webdriver.chrome.options import Options as ChromeOptions
+from selenium.webdriver.common.by import By
 
 
 def save_cookies(login_cookies):
@@ -81,7 +83,7 @@ def account_login(login_type: str, login_id=None, login_password=None):
     damai_title = '大麦网-全球演出赛事官方购票平台-100%正品、先付先抢、在线选座！'
 
     login_url = 'https://passport.damai.cn/login'
-    option = webdriver.ChromeOptions()  # 默认Chrome浏览器
+    option = ChromeOptions()  # 默认Chrome浏览器
     # 关闭开发者模式, window.navigator.webdriver 控件检测到你是selenium进入，若关闭会导致出现滑块并无法进入。
     option.add_experimental_option('excludeSwitches', ['enable-automation'])
     option.add_argument('--disable-blink-features=AutomationControlled')
@@ -90,21 +92,24 @@ def account_login(login_type: str, login_id=None, login_password=None):
     # option.add_argument('no-sandbox')             # 取消沙盒模式
     # option.add_argument('--disable-gpu')          # 禁用GPU加速
     # option.add_argument('disable-dev-shm-usage')  # 大量渲染时候写入/tmp而非/dev/shm
-    if platform.system().lower() == 'linux':
-        chromedriver = os.path.join(os.getcwd(), 'chromedriver_linux')
-    elif platform.system().lower() == 'windows':
-        chromedriver = os.path.join(os.getcwd(), 'chromedriver_windows')
-    else:
-        chromedriver = os.path.join(os.getcwd(), 'chromedriver_mac')
+    # TODO: 这部分感觉没用
+    # if platform.system().lower() == 'linux':
+    #     chromedriver = os.path.join(os.getcwd(), 'chromedriver_linux')
+    # elif platform.system().lower() == 'windows':
+    #     chromedriver = os.path.join(os.getcwd(), 'chromedriver_windows')
+    # else:
+    #     chromedriver = os.path.join(os.getcwd(), 'chromedriver_mac')
 
-    driver = webdriver.Chrome(chromedriver, options=option)
+    chromedriver = os.path.join(os.getcwd(), 'chromedriver_windows')
+
+    driver = webdriver.Chrome(options=option)
     driver.set_page_load_timeout(60)
     driver.get(login_url)
     if login_type == 'account':
         driver.switch_to.frame('alibaba-login-box')  # 切换内置frame，否则会找不到元素位置
-        driver.find_element_by_name('fm-login-id').send_keys(login_id)
-        driver.find_element_by_name('fm-login-password').send_keys(login_password)
-        driver.find_element_by_class_name('password-login').send_keys(Keys.ENTER)
+        driver.find_element(By.NAME, 'fm-login-id').send_keys(login_id)
+        driver.find_element(By.NAME, 'fm-login-password').send_keys(login_password)
+        driver.find_element(By.CLASS_NAME, 'password-login').send_keys(Keys.ENTER)
     WebDriverWait(driver, 180, 0.5).until(EC.title_contains(damai_title))
 
     login_cookies = {}
